@@ -12,11 +12,16 @@
     "@types/react-dom": "^18.2.4",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.4.0",
+    "command-line-args": "^5.2.1",
+    "command-line-usage": "^7.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2",
     "react-scripts": "5.0.1",
+    "ts-morph": "^18.0.0",
+    "tsconfig": "^7.0.0",
     "typescript": "^4.9.5",
+    "typescript-is": "^0.19.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -42,5 +47,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "ttypescript": "^1.5.15"
   }
 }

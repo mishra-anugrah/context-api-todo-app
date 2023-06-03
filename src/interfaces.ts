@@ -1,29 +1,10 @@
 import React from "react";
 
-export type ITodoAddAction = { type: string; payload: ITodoItem };
-export type ITodoDeleteAction = { type: string; payload: string | number };
-export type ITodoAddChildAction = {type: string; payload: {parentId: number | string, childTodo: ITodoItem}}
-export type ITodoDeleteChildAction = {type: string, payload: {parentId: number | string; childId: number | string}}
 
-export type IAuthAction = 
-  | {type: 'SIGN_IN', payload: {token: string}} 
-  | {type: 'SIGN_OUT'};
+export type IAuthSignInAction =  {type: string, payload: {token: string}};
+export type IAuthSignOutAction =  {type: string};
 
-export interface ITodoItem {
-  id: string;
-  title: string;
-  active: boolean;
-  children?: [] | ITodoItem[];
-}
-
-export interface ITodoState {
-  todos: void[] | ITodoItem[];
-}
-
-export interface ITodoContextModel {
-  state: ITodoState;
-  dispatch: React.Dispatch<ITodoAddAction | ITodoDeleteAction | ITodoAddChildAction | ITodoDeleteChildAction>;
-}
+export type IAuthAction = IAuthSignInAction | IAuthSignOutAction;
 
 export interface IAuthContextModel {
   state: IAuthContextState;
@@ -33,7 +14,36 @@ export interface IAuthContextModel {
 export interface IAuthContextState {
   isAuth: boolean,
   token: string
-  // userInfo: {
-  //   userName: string,
-  // }
 }
+
+export interface ITodoAddAction { type: string; payload: ITodoItem };
+export interface ITodoDeleteAction { type: string; payload: string | number };
+export interface ITodoAddChildAction {type: string; payload: {parentId: number | string, childTodo: ITodoItem}}
+export interface ITodoDeleteChildAction {type: string, payload: {parentId: number | string; childId: number | string}}
+
+export interface ITodoItem {
+  id: string;
+  title: string;
+  active: boolean;
+  children?:  ITodoItem[];
+}
+
+export interface ITodoState {
+  todos: ITodoItem[];
+}
+
+export interface ITodoContextModel {
+  state: ITodoState;
+  dispatch: React.Dispatch<ITodoAddAction | ITodoDeleteAction | ITodoAddChildAction | ITodoDeleteChildAction>;
+}
+
+// export const isAddingNewChild = (action: unknown) : action is ITodoAddChildAction => {
+
+//   if (!action
+//     || typeof action !== 'object'
+//     || typeof action.type !== 'string'
+//     || action.payload
+//     ) return false;
+
+//   return true;
+// }

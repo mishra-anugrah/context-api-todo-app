@@ -25,7 +25,7 @@ const TodoList = () => {
 
   return todos.length > 0 ? (
     <ul>
-      {todos.map((todo) => (
+      {todos.map((todo: ITodoItem) => (
         <>
           <li key={todo.id}>
             <div className="todo-item-container">
@@ -53,7 +53,15 @@ const TodoList = () => {
             ) : (
               <></>
             )}
-            {addChildren ? <AddTodo isChild parentId={todo.id} /> : <></>}
+            {addChildren ? (
+              <AddTodo
+                isChild
+                parentId={todo.id}
+                setAddChildren={setAddChildren}
+              />
+            ) : (
+              <></>
+            )}
           </li>
         </>
       ))}

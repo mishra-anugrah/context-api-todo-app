@@ -5,12 +5,13 @@ import { addChildTodo, addTodo } from "../actions/TodoActions";
 interface IAddTodoProps {
   isChild: boolean;
   parentId?: number | string;
+  setAddChildren?: (boolean) => void;
 }
 
 const AddTodo = (props: IAddTodoProps) => {
   const { dispatch } = useContext(TodoContext);
 
-  const { isChild, parentId } = props;
+  const { isChild, parentId, setAddChildren } = props;
 
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -32,22 +33,23 @@ const AddTodo = (props: IAddTodoProps) => {
       children: [],
     };
 
-    if (!isChild) {
-      dispatch(addTodo(newTodo));
-    } else {
+    if (isChild) {
       dispatch(addChildTodo(parentId, newTodo));
+    } else {
+      dispatch(addTodo(newTodo));
     }
 
     setInputValue("");
+    // setAddChildren ?? setAddChildren(false);
   };
 
   return (
-    <form>
+    <>
       <input type="text" value={inputValue} onChange={inputValueHandler} />
       <button type="button" onClick={submitHandler}>
         Add
       </button>
-    </form>
+    </>
   );
 };
 

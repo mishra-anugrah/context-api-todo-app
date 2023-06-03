@@ -6,9 +6,10 @@ import {
   ITodoContextModel,
   ITodoAddChildAction,
   ITodoDeleteChildAction,
+  ITodoItem,
 } from "../interfaces";
-import { ITodoItem } from "../interfaces";
 import { TODO_ACTIONS } from "../constants";
+import { is } from "typescript-is";
 
 const defaultState: ITodoState = {
   todos: [],
@@ -24,41 +25,60 @@ const reducer = (
 ): ITodoState => {
   switch (action.type) {
     case TODO_ACTIONS.ADD:
-      return {
-        ...state,
-        todos: [...state.todos, action.payload],
-      };
+      if (is<ITodoAddAction>(action)) {
+        return {
+          ...state,
+          todos: [...state.todos, action.payload],
+        };
+      }
+      break;
 
     case TODO_ACTIONS.DELETE:
-      return {
-        ...state,
-        todos: state.todos.filter(
-          (item: ITodoItem) => item.id !== action.payload
-        ),
-      };
+      if (is<ITodoDeleteAction>(action)) {
+        return {
+          ...state,
+          todos: state.todos.filter(
+            (item: ITodoItem) => item.id !== action.payload
+          ),
+        };
+      }
+      break;
 
     case TODO_ACTIONS.ADD_CHILD:
-      const newTodos = [...state.todos].map((parentTodo: ITodoItem) => {
-        if (parentTodo.id === action.payload.parentId) {
-          parentTodo.children.push(action.payload.childTodo);
-        }
-        return parentTodo;
-      });
+      let newTodos: ITodoItem[];
 
+      if (is<ITodoAddChildAction>(action)) {
+        newTodos = [...state.todos].map((parentTodo: ITodoItem) => {
+          if (parentTodo.id === action.payload.parentId) {
+            parentTodo.children.push(action.payload.childTodo);
+          }
+          return parentTodo as ITodoItem;
+        });
+      }
       return {
         ...state,
         todos: [...newTodos],
       };
 
     case TODO_ACTIONS.DELETE_CHILD: {
-      const newTodos = [...state.todos].map((parentTodo) => {
-        if (parentTodo.id === action.payload.parentId) {
-          parentTodo.children = parentTodo.children.filter(
-            (childTodo: ITodoItem) => childTodo.id !== action.payload.childId
-          );
-        }
-        return parentTodo;
-      });
+      let newTodos: ITodoItem[];
+      if (is<ITodoDeleteChildAction>(action)) {
+        newTodos = [...state.todos].map((parentTodo: ITodoItem) => {
+          if (
+            // typeof action.payload === "object" &&
+            // "parentId" in action.payload &&
+            is<ITodoDeleteChildAction>(action) &&
+            parentTodo.id === action.payload.parentId
+          ) {
+            parentTodo.children = parentTodo.children.filter(
+              (childTodo: ITodoItem) =>
+                is<ITodoDeleteAction>(action) &&
+                childTodo.id !== action.payload.childId
+            );
+          }
+          return parentTodo;
+        });
+      }
 
       return {
         ...state,
@@ -67,11 +87,14 @@ const reducer = (
     }
 
     default:
-      return state;
+      return { ...state };
   }
 };
 
-export const TodoContext = createContext({} as ITodoContextModel);
+export const TodoContext = createContext({
+  state: defaultState,
+  dispatch: () => {},
+} as ITodoContextModel);
 
 export const TodoProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(reducer, defaultState);
