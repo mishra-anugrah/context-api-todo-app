@@ -1,4 +1,4 @@
-import { IAuthAction, ITodoItem } from "../interfaces";
+import { IAuthAction } from "../interfaces";
 
 export const signIn = (token: string): IAuthAction => ({
   type: "SIGN_IN",

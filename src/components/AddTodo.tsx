@@ -11,7 +11,7 @@ interface IAddTodoProps {
 const AddTodo = (props: IAddTodoProps) => {
   const { dispatch } = useContext(TodoContext);
 
-  const { isChild, parentId, setAddChildren } = props;
+  const { isChild, parentId } = props;
 
   const [inputValue, setInputValue] = useState<string>("");
 
