@@ -7,7 +7,7 @@ module.exports = {
   mode: process.env.NODE_ENV || "development",
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
-    fallback: { util: false },
+    // fallback: { util: require.resolve("./src/utils/utils.js") },
   },
   devServer: { contentBase: path.join(__dirname, "src") },
   module: {
